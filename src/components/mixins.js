@@ -49,6 +49,10 @@ export const useTreeNode = (params) => {
     const { node, context } = params
     const { methods } = context
 
+    const text = computed(() => {
+      return methods.getNodeText(node)
+    })
+
     const children = computed(() => {
       return (node.children || []).map((child) => {
         return toTreeNodeProxy(child)(methods.generateId(node), getNodeId(node))
@@ -68,6 +72,7 @@ export const useTreeNode = (params) => {
     }
 
     const nodeContext = {
+      text,
       children,
       isLeaf,
       isOpen,

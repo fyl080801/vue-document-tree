@@ -8,7 +8,7 @@ const data = ref([
     children: [
       { text: 'aaa-1', isLeaf: true },
       { text: 'aaa-2', children: [{ text: 'xxxx', isLeaf: true }] },
-      { text: 'aaa-3', isLeaf: true },
+      { text: 'aaa-3' },
       { text: 'aaa-4', isLeaf: true },
     ],
   },

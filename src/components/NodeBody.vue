@@ -1,14 +1,29 @@
 <script setup>
+import { ref } from '@vue/reactivity'
+
 defineProps({ depth: { type: Number, default: 0 }, line: Boolean })
 
-const onDragover = (event) => {
-  event.preventDefault()
+const draggingOver = ref(false)
+
+const onDragover = () => {
+  draggingOver.value = true
+}
+
+const onDragleave = () => {
+  draggingOver.value = false
 }
 </script>
 
 <template>
   <div class="node-body">
-    <div v-for="i in depth" :key="i" class="depth-line" @dragover="onDragover"></div>
+    <div
+      v-for="i in depth"
+      :key="i"
+      class="depth-line"
+      :class="{ in: draggingOver && i === depth }"
+      @dragover="onDragover"
+      @dragleave="onDragleave"
+    ></div>
     <div class="content">
       <slot />
     </div>
@@ -28,5 +43,9 @@ const onDragover = (event) => {
 
 .depth-line {
   width: 30px;
+}
+
+.in {
+  background-color: red;
 }
 </style>

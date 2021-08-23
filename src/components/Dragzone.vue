@@ -25,14 +25,11 @@ const onDragleave = () => {
 
 <style scope>
 .dragzone {
-  position: absolute;
-  left: 0;
-  right: 0;
+  width: 100%;
   background: rgba(3, 101, 248, 0.144);
   height: 20px;
   margin-top: -10px;
   margin-bottom: -10px;
-  z-index: 1;
 }
 
 .over {

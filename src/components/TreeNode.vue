@@ -4,6 +4,7 @@ import Dragzone from './Dragzone.vue'
 import { getNodeId } from '../utils/tree'
 import { reactive } from '@vue/reactivity'
 import NodeBody from './NodeBody.vue'
+import TreeNodeList from './TreeNodeList.vue'
 
 const props = defineProps({
   node: { type: Object, required: true },
@@ -14,64 +15,35 @@ const context = useTree()
 
 const { methods } = context
 
-const { isLeaf, children, isOpen, onToggleOpen } = useTreeNode({
+const { text, isLeaf, children, isOpen, onToggleOpen } = useTreeNode({
   node: reactive(props.node),
   context,
 })
 </script>
 
 <template>
-  <div>
+  <div class="node-layer">
     <NodeBody :depth="depth">
+      <div class="text" draggable="true">
+        <span>{{ text }}</span>
+        <span v-if="!isLeaf" @click="onToggleOpen">[{{ isOpen ? '-' : '+' }}]</span>
+      </div>
+    </NodeBody>
+    <NodeBody :depth="depth" class="bottom">
       <Dragzone />
     </NodeBody>
-    <div>
-      <NodeBody :depth="depth">
-        <div class="text" draggable="true">
-          <span>{{ methods.getNodeText(node) }}</span>
-          <span v-if="!isLeaf" @click="onToggleOpen">[{{ isOpen ? '-' : '+' }}]</span>
-        </div>
-      </NodeBody>
-      <NodeBody :depth="depth">
-        <Dragzone />
-      </NodeBody>
-      <div>
-        <TreeNode
-          v-for="child in children"
-          :key="getNodeId(child)"
-          :node="child"
-          :depth="depth + 1"
-        />
-      </div>
+
+    <div v-if="isOpen" class="node-layer">
+      <TreeNodeList :node="node" :depth="depth + 1" />
     </div>
   </div>
-  <!-- <NodeBody :depth="depth">
-    <div class="text" draggable="true">
-      <span>{{ methods.getNodeText(node) }}</span>
-      <span v-if="!isLeaf" @click="onToggleOpen">[{{ isOpen ? '-' : '+' }}]</span>
-    </div>
-  </NodeBody>
-  <div class="children">
-    <NodeBody :depth="depth" :line="true" class="bottom">
-      <Dragzone />
-    </NodeBody>
-
-    <template v-if="isOpen">
-      <NodeBody :depth="depth + 1" :line="true">
-        <Dragzone />
-      </NodeBody>
-
-      <TreeNode
-        v-for="child in children"
-        :key="getNodeId(child)"
-        :node="child"
-        :depth="depth + 1"
-      />
-    </template>
-  </div> -->
 </template>
 
 <style scoped>
+.node-layer {
+  position: relative;
+}
+
 .text {
   position: relative;
   z-index: 0;
@@ -79,16 +51,12 @@ const { isLeaf, children, isOpen, onToggleOpen } = useTreeNode({
   line-height: 30px;
 }
 
-.children {
-  position: relative;
-}
-
 .bottom {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 0;
+  z-index: 1;
 }
 
 .z-1 {
