@@ -6,13 +6,13 @@ import { getNodeId } from '../utils/tree'
 import NodeBody from './NodeBody.vue'
 
 const props = defineProps({
-  node: Object,
+  parent: Object,
   depth: { type: Number, default: 0 },
 })
 
 const context = useTree()
 
-const { children } = useTreeNode({ node: props.node, context })
+const { children } = useTreeNode({ node: props.parent, context })
 </script>
 
 <template>

@@ -1,10 +1,9 @@
 <script setup>
 import { useTree, useTreeNode } from './mixins'
 import Dragzone from './Dragzone.vue'
-import { getNodeId } from '../utils/tree'
 import { reactive } from '@vue/reactivity'
 import NodeBody from './NodeBody.vue'
-import TreeNodeList from './TreeNodeList.vue'
+import TreeNodeChildren from './TreeNodeChildren.vue'
 
 const props = defineProps({
   node: { type: Object, required: true },
@@ -13,9 +12,7 @@ const props = defineProps({
 
 const context = useTree()
 
-const { methods } = context
-
-const { text, isLeaf, children, isOpen, onToggleOpen } = useTreeNode({
+const { text, isLeaf, isOpen, onToggleOpen } = useTreeNode({
   node: reactive(props.node),
   context,
 })
@@ -23,8 +20,13 @@ const { text, isLeaf, children, isOpen, onToggleOpen } = useTreeNode({
 
 <template>
   <div class="node-layer">
-    <NodeBody :depth="depth">
-      <div class="text" draggable="true">
+    <NodeBody :depth="depth" :node="node" class="border">
+      <div
+        class="text"
+        draggable="true"
+        @dragstart="context.state.dragging = true"
+        @dragend="context.state.dragging = false"
+      >
         <span>{{ text }}</span>
         <span v-if="!isLeaf" @click="onToggleOpen">[{{ isOpen ? '-' : '+' }}]</span>
       </div>
@@ -34,7 +36,7 @@ const { text, isLeaf, children, isOpen, onToggleOpen } = useTreeNode({
     </NodeBody>
 
     <div v-if="isOpen" class="node-layer">
-      <TreeNodeList :node="node" :depth="depth + 1" />
+      <TreeNodeChildren :parent="node" :depth="depth + 1" />
     </div>
   </div>
 </template>
@@ -59,10 +61,11 @@ const { text, isLeaf, children, isOpen, onToggleOpen } = useTreeNode({
   z-index: 1;
 }
 
-.z-1 {
-  z-index: 1;
+.border {
+  border: 1px solid transparent;
 }
-.z-2 {
-  z-index: 2;
+
+.border:hover {
+  border-color: blue;
 }
 </style>

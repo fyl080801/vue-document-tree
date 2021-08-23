@@ -29,10 +29,10 @@ const defaults = {
 
 export const useTree = (params) => {
   if (params) {
-    const { props = {}, methods = {} } = params
+    const { state = {}, methods = {} } = params
 
     const context = {
-      props: reactive(props),
+      state: reactive(state),
       methods: { ...defaults.methods, ...cleanObject(methods) },
     }
 
@@ -40,7 +40,7 @@ export const useTree = (params) => {
 
     return context
   } else {
-    return inject(treeToken, { props: reactive({}), ...defaults })
+    return inject(treeToken, { state: reactive({}), ...defaults })
   }
 }
 
@@ -72,6 +72,7 @@ export const useTreeNode = (params) => {
     }
 
     const nodeContext = {
+      node,
       text,
       children,
       isLeaf,

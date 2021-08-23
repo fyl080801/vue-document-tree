@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from '@vue/reactivity'
+import { useTree } from './mixins'
+
+const { state } = useTree()
 
 const draggingOver = ref(false)
 
@@ -14,9 +17,10 @@ const onDragleave = () => {
 
 <template>
   <div
+    v-if="state.dragging"
     class="dragzone"
     :class="{ over: draggingOver }"
-    @dragover="onDragover"
+    @dragenter="onDragover"
     @dragleave="onDragleave"
   >
     <slot />

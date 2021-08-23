@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from '@vue/reactivity'
+import { useTreeNode } from './mixins'
 
-defineProps({ depth: { type: Number, default: 0 }, line: Boolean })
+defineProps({ depth: { type: Number, default: 0 }, node: Object })
 
 const draggingOver = ref(false)
 
@@ -21,7 +22,7 @@ const onDragleave = () => {
       :key="i"
       class="depth-line"
       :class="{ in: draggingOver && i === depth }"
-      @dragover="onDragover"
+      @dragenter="onDragover"
       @dragleave="onDragleave"
     ></div>
     <div class="content">
@@ -37,7 +38,6 @@ const onDragleave = () => {
 }
 
 .content {
-  position: relative;
   flex: 1;
 }
 

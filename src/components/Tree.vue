@@ -1,14 +1,14 @@
 <script setup>
 import Dragzone from './Dragzone.vue'
 import { useTree, useTreeNode } from './mixins'
-import TreeNode from './TreeNode.vue'
-import { getNodeId } from '../utils/tree'
-import { reactive } from '@vue/reactivity'
-import TreeNodeList from './TreeNodeList.vue'
+import TreeNodeChildren from './TreeNodeChildren.vue'
 
 const props = defineProps({ data: { type: Array, default: () => [], options: Object } })
 
 const context = useTree({
+  state: {
+    dragging: false,
+  },
   methods: {
     generateId: props.options?.generateId,
     isLeaf: props.options?.isLeaf,
@@ -25,7 +25,7 @@ const { children } = useTreeNode({
 <template>
   <div class="doc-tree">
     <template v-if="children?.length > 0">
-      <TreeNodeList :node="{ children }" />
+      <TreeNodeChildren :parent="{ children }" />
     </template>
     <Dragzone v-else>add node</Dragzone>
   </div>
