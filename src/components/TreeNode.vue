@@ -2,6 +2,8 @@
 import { useTree, useTreeNode } from './mixins'
 import Dragzone from './Dragzone.vue'
 import { getNodeId } from '../utils/tree'
+import { reactive } from '@vue/reactivity'
+import NodeBody from './NodeBody.vue'
 
 const props = defineProps({
   node: { type: Object, required: true },
@@ -12,63 +14,87 @@ const context = useTree()
 
 const { methods } = context
 
-const { isLeaf, children } = useTreeNode({
-  node: props.node,
+const { isLeaf, children, isOpen, onToggleOpen } = useTreeNode({
+  node: reactive(props.node),
   context,
 })
 </script>
 
 <template>
-  <div class="tree-node" draggable="true">
-    <div class="tree-node-content">
-      <div v-for="i in depth" class="depth"></div>
-      <div class="content">{{ methods.getNodeText(node) }}</div>
-    </div>
-  </div>
-  <template v-if="!isLeaf">
-    <div class="children">
-      <div v-for="i in depth" class="depth"></div>
+  <div>
+    <NodeBody :depth="depth">
       <Dragzone />
+    </NodeBody>
+    <div>
+      <NodeBody :depth="depth">
+        <div class="text" draggable="true">
+          <span>{{ methods.getNodeText(node) }}</span>
+          <span v-if="!isLeaf" @click="onToggleOpen">[{{ isOpen ? '-' : '+' }}]</span>
+        </div>
+      </NodeBody>
+      <NodeBody :depth="depth">
+        <Dragzone />
+      </NodeBody>
+      <div>
+        <TreeNode
+          v-for="child in children"
+          :key="getNodeId(child)"
+          :node="child"
+          :depth="depth + 1"
+        />
+      </div>
     </div>
-    <TreeNode v-for="child in children" :key="getNodeId(child)" :node="child" :depth="depth + 1" />
-  </template>
-  <div style="display: flex; flex-direction: row">
-    <div v-for="i in depth" class="depth"></div>
-    <Dragzone />
   </div>
+  <!-- <NodeBody :depth="depth">
+    <div class="text" draggable="true">
+      <span>{{ methods.getNodeText(node) }}</span>
+      <span v-if="!isLeaf" @click="onToggleOpen">[{{ isOpen ? '-' : '+' }}]</span>
+    </div>
+  </NodeBody>
+  <div class="children">
+    <NodeBody :depth="depth" :line="true" class="bottom">
+      <Dragzone />
+    </NodeBody>
+
+    <template v-if="isOpen">
+      <NodeBody :depth="depth + 1" :line="true">
+        <Dragzone />
+      </NodeBody>
+
+      <TreeNode
+        v-for="child in children"
+        :key="getNodeId(child)"
+        :node="child"
+        :depth="depth + 1"
+      />
+    </template>
+  </div> -->
 </template>
 
-<style>
-.tree-node,
+<style scoped>
+.text {
+  position: relative;
+  z-index: 0;
+  height: 30px;
+  line-height: 30px;
+}
+
 .children {
   position: relative;
-  display: flex;
-  flex-direction: row;
 }
 
-.tree-node-content {
-  display: flex;
-  flex-direction: row;
+.bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
 }
 
-.content-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-items: stretch;
+.z-1 {
+  z-index: 1;
 }
-
-.depth,
-.content {
-  padding: 0.5rem 0.75rem;
-}
-
-.depth > *,
-.content > * {
-  vertical-align: middle;
-}
-
-.content {
-  flex: 1;
+.z-2 {
+  z-index: 2;
 }
 </style>

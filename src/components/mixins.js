@@ -18,6 +18,12 @@ const defaults = {
     getNodeText: (node) => {
       return node.text
     },
+    isOpen: (node) => {
+      return node.isOpen === true
+    },
+    toggleOpen: (node) => {
+      node.isOpen = !node.isOpen
+    },
   },
 }
 
@@ -53,9 +59,19 @@ export const useTreeNode = (params) => {
       return methods.isLeaf(node)
     })
 
+    const isOpen = computed(() => {
+      return methods.isOpen(node)
+    })
+
+    const onToggleOpen = () => {
+      methods.toggleOpen(node)
+    }
+
     const nodeContext = {
       children,
       isLeaf,
+      isOpen,
+      onToggleOpen,
     }
 
     provide(treeNodeToken, nodeContext)
