@@ -16,35 +16,22 @@ const onDragleave = () => {
 </script>
 
 <template>
-  <div class="node-body">
+  <div class="flex flex-row">
     <div
       v-for="i in depth"
       :key="i"
-      class="depth-line"
+      class="w-8"
       :class="{ in: draggingOver && i === depth }"
       @dragenter="onDragover"
       @dragleave="onDragleave"
     ></div>
-    <div class="content">
+    <div class="flex-1">
       <slot />
     </div>
   </div>
 </template>
 
 <style scoped>
-.node-body {
-  display: flex;
-  flex-direction: row;
-}
-
-.content {
-  flex: 1;
-}
-
-.depth-line {
-  width: 30px;
-}
-
 .in {
   background-color: red;
 }

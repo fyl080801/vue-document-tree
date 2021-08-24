@@ -23,18 +23,10 @@ const { children } = useTreeNode({
 </script>
 
 <template>
-  <div class="doc-tree">
+  <div class="flex flex-col relative">
     <template v-if="children?.length > 0">
       <TreeNodeChildren :parent="{ children }" />
     </template>
     <Dragzone v-else>add node</Dragzone>
   </div>
 </template>
-
-<style>
-.doc-tree {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-</style>

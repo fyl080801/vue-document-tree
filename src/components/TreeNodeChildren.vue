@@ -16,25 +16,17 @@ const { children } = useTreeNode({ node: props.parent, context })
 </script>
 
 <template>
-  <div class="flex flex-v">
-    <NodeBody :depth="depth" class="z-1">
+  <div class="flex flex-col">
+    <NodeBody :depth="depth" class="absolute w-full z-1">
       <Dragzone />
     </NodeBody>
-    <div class="flex flex-v">
+    <div class="flex flex-col">
       <TreeNode v-for="child in children" :key="getNodeId(child)" :node="child" :depth="depth" />
     </div>
   </div>
 </template>
 
 <style scoped>
-.flex {
-  display: flex;
-}
-
-.flex-v {
-  flex-direction: column;
-}
-
 .z-1 {
   z-index: 1;
 }

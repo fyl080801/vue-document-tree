@@ -19,10 +19,14 @@ const { text, isLeaf, isOpen, onToggleOpen } = useTreeNode({
 </script>
 
 <template>
-  <div class="node-layer">
-    <NodeBody :depth="depth" :node="node" class="border">
+  <div class="relative">
+    <NodeBody
+      :depth="depth"
+      :node="node"
+      class="border border-solid border-transparent hover:border-blue-500"
+    >
       <div
-        class="text"
+        class="relative leading-tight py-1"
         draggable="true"
         @dragstart="context.state.dragging = true"
         @dragend="context.state.dragging = false"
@@ -31,41 +35,18 @@ const { text, isLeaf, isOpen, onToggleOpen } = useTreeNode({
         <span v-if="!isLeaf" @click="onToggleOpen">[{{ isOpen ? '-' : '+' }}]</span>
       </div>
     </NodeBody>
-    <NodeBody :depth="depth" class="bottom">
+    <NodeBody :depth="depth" class="absolute bottom-0 w-full z-1">
       <Dragzone />
     </NodeBody>
 
-    <div v-if="isOpen" class="node-layer">
+    <div v-if="isOpen" class="relative">
       <TreeNodeChildren :parent="node" :depth="depth + 1" />
     </div>
   </div>
 </template>
 
 <style scoped>
-.node-layer {
-  position: relative;
-}
-
-.text {
-  position: relative;
-  z-index: 0;
-  height: 30px;
-  line-height: 30px;
-}
-
-.bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.z-1 {
   z-index: 1;
-}
-
-.border {
-  border: 1px solid transparent;
-}
-
-.border:hover {
-  border-color: blue;
 }
 </style>

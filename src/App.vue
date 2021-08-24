@@ -6,7 +6,7 @@ const data = ref([
   {
     text: 'aaaa',
     children: [
-      { text: 'aaa-1', isLeaf: true },
+      { text: '啊啊啊啊', isLeaf: true },
       { text: 'aaa-2', children: [{ text: 'xxxx', isLeaf: true }] },
       { text: 'aaa-3' },
       { text: 'aaa-4', isLeaf: true },
@@ -27,12 +27,3 @@ const data = ref([
     <DocTree :data="data" />
   </div>
 </template>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-</style>

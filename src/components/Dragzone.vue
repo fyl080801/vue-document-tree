@@ -18,7 +18,7 @@ const onDragleave = () => {
 <template>
   <div
     v-if="state.dragging"
-    class="dragzone"
+    class="w-full h-4 -my-2 bg-blue-900 bg-opacity-10"
     :class="{ over: draggingOver }"
     @dragenter="onDragover"
     @dragleave="onDragleave"
@@ -28,15 +28,7 @@ const onDragleave = () => {
 </template>
 
 <style scope>
-.dragzone {
-  width: 100%;
-  background: rgba(3, 101, 248, 0.144);
-  height: 20px;
-  margin-top: -10px;
-  margin-bottom: -10px;
-}
-
 .over {
-  background: rgba(3, 101, 248, 0.344);
+  background: rgba(3, 101, 248, 0.344) !important;
 }
 </style>
