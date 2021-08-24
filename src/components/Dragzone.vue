@@ -2,16 +2,26 @@
 import { ref } from '@vue/reactivity'
 import { useTree } from './mixins'
 
+const emit = defineEmits(['droped'])
+
 const { state } = useTree()
 
 const draggingOver = ref(false)
 
-const onDragover = () => {
+const onDragover = (event) => {
+  event.preventDefault()
   draggingOver.value = true
+
+  const onDragleave = () => {
+    draggingOver.value = false
+    event.target.removeEventListener('dragleave', onDragleave)
+  }
+
+  event.target.addEventListener('dragleave', onDragleave, false)
 }
 
-const onDragleave = () => {
-  draggingOver.value = false
+const onDrop = () => {
+  emit('droped')
 }
 </script>
 
@@ -21,7 +31,8 @@ const onDragleave = () => {
     class="w-full h-4 -my-2 bg-blue-900 bg-opacity-10"
     :class="{ over: draggingOver }"
     @dragenter="onDragover"
-    @dragleave="onDragleave"
+    @dragover="(event) => event.preventDefault()"
+    @drop="onDrop"
   >
     <slot />
   </div>

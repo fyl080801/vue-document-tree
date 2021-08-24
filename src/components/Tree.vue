@@ -1,11 +1,11 @@
 <script setup>
 import Dragzone from './Dragzone.vue'
-import { useTree, useTreeNode } from './mixins'
+import { useTree, useTreeNode, useTreeRoot } from './mixins'
 import TreeNodeChildren from './TreeNodeChildren.vue'
 
 const props = defineProps({ data: { type: Array, default: () => [], options: Object } })
 
-const context = useTree({
+const context = useTreeRoot({
   state: {
     dragging: false,
   },
@@ -23,9 +23,9 @@ const { children } = useTreeNode({
 </script>
 
 <template>
-  <div class="flex flex-col relative">
+  <div class="relative flex flex-col">
     <template v-if="children?.length > 0">
-      <TreeNodeChildren :parent="{ children }" />
+      <TreeNodeChildren />
     </template>
     <Dragzone v-else>add node</Dragzone>
   </div>

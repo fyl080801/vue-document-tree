@@ -1,5 +1,5 @@
-import { computed, inject, provide, reactive } from 'vue'
-import { cleanObject } from '../utils/helper'
+import { computed, inject, nextTick, provide, reactive, watch } from 'vue'
+import { cleanObject, insertToArray, removeFromArray } from '../utils/helper'
 import { toTreeNodeProxy, getNodeId } from '../utils/tree'
 
 const treeToken = Symbol('treeToken')
@@ -27,21 +27,39 @@ const defaults = {
   },
 }
 
-export const useTree = (params) => {
-  if (params) {
-    const { state = {}, methods = {} } = params
+export const useTreeRoot = (params) => {
+  const { state = {}, methods = {} } = params
 
-    const context = {
-      state: reactive(state),
-      methods: { ...defaults.methods, ...cleanObject(methods) },
-    }
-
-    provide(treeToken, context)
-
-    return context
-  } else {
-    return inject(treeToken, { state: reactive({}), ...defaults })
+  const context = {
+    state: reactive({ ...state, changes: [], from: null }),
+    methods: { ...defaults.methods, ...cleanObject(methods) },
   }
+
+  provide(treeToken, context)
+
+  watch(
+    () => context.state.changes.length,
+    (value) => {
+      if (value <= 0) {
+        return
+      }
+
+      nextTick(() => {
+        context.state.changes.forEach(({ from, to }) => {
+          const remove = removeFromArray(from.node.children, from.index)
+          insertToArray((to.node.children ||= []), to.index, remove)
+        })
+
+        context.state.changes.length = 0
+      })
+    }
+  )
+
+  return context
+}
+
+export const useTree = () => {
+  return inject(treeToken, { state: reactive({ dragging: false }), ...defaults })
 }
 
 export const useTreeNode = (params) => {
