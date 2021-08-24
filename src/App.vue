@@ -23,7 +23,7 @@ const data = ref([
 </script>
 
 <template>
-  <div style="width: 200px">
+  <div style="width: 200px; margin-left: 200px; margin-top: 200px">
     <DocTree :data="data" />
   </div>
 </template>
